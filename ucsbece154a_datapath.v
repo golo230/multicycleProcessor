@@ -19,7 +19,7 @@ module ucsbece154a_datapath (
     input         [2:0] ALUControl_i,
     input         [2:0] ImmSrc_i,
     output  wire        zero_o,
-    output  wire [31:0] Adr_o,                       
+    output  wire [31:0] Adr_o,                      
     output  wire [31:0] WriteData_o,                    
     input        [31:0] ReadData_i,
     output  wire [6:0]  op_o,
@@ -94,14 +94,14 @@ ucsbece154a_alu alu (
 
 // Extend unit block
 always @ * begin
-	case (ImmSrc_i)	
-		imm_Itype: ImmExt = {{20{Instr[31]}}, Instr[31:20]};
-		imm_Stype: ImmExt = {{20{Instr[31]}}, Instr[31:25], Instr[11:7]};
-		imm_Btype: ImmExt = {{20{Instr[31]}}, Instr[31:25], Instr[11:7]};
-		imm_Jtype: ImmExt = {{12{Instr[31]}}, Instr[31:12]};
-		imm_Utype: ImmExt = {Instr[31:12], 12'b0};
-		default: ImmExt = 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
-	endcase
+    case (ImmSrc_i)
+        imm_Itype: ImmExt = {{20{Instr[31]}}, Instr[31:20]};
+        imm_Stype: ImmExt = {{20{Instr[31]}}, Instr[31:25], Instr[11:7]};
+        imm_Btype: ImmExt = {{20{Instr[31]}}, Instr[7], Instr[30:25], Instr[11:8], 1'b0};
+        imm_Jtype: ImmExt = {{12{Instr[31]}}, Instr[19:12], Instr[20], Instr[30:21], 1'b0};
+        imm_Utype: ImmExt = {Instr[31:12], 12'b0};
+        default: ImmExt = 32'bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx;
+    endcase
 end
 
 // Muxes
@@ -130,6 +130,7 @@ always @ * begin
         2'b00: Result = ALUout;
         2'b01: Result = Data;
         2'b10: Result = ALUResult;
+        2'b11: Result = ImmExt;
         default: Result = 32'bx;
     endcase
 end

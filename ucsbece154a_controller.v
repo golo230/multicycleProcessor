@@ -87,11 +87,11 @@ module ucsbece154a_controller (
  always @ * begin
     if (reset) begin
                                state_next = 4'b0000;  
-    end else begin             
-      case (state) 
+    end else begin            
+      case (state)
         state_Fetch:           state_next = 4'b0001;  
         state_Decode: begin
-          case (op_i) 
+          case (op_i)
             instr_lw_op:       state_next = 4'b0010;  
             instr_sw_op:       state_next = 4'b0010;  
             instr_Rtype_op:    state_next = 4'b0110;  
@@ -102,7 +102,7 @@ module ucsbece154a_controller (
             default:           state_next = 4'bxxxx;
           endcase
         end
-        state_MemAdr: begin 
+        state_MemAdr: begin
           case (op_i)
             instr_lw_op:       state_next = 4'b0011;  
             instr_sw_op:       state_next = 4'b0101;  
@@ -117,7 +117,7 @@ module ucsbece154a_controller (
         state_ExecuteI:        state_next = 4'b0111;  
         state_JAL:             state_next = 4'b0111;  
         state_BEQ:             state_next = 4'b0000;  
-        state_LUI:             state_next = 4'b0111;     
+        state_LUI:             state_next = 4'b0000;    
         default:               state_next = 4'bxxxx;
      endcase
    end
@@ -136,18 +136,18 @@ module ucsbece154a_controller (
 
  always @ * begin
    case (state_next)
-	state_Fetch:     controls_next = 14'b1_x_0_1_0_00_10_0_10_00;      
-	state_Decode:    controls_next = 14'b0_0_0_0_0_01_01_x_xx_00; 
-	state_MemAdr:    controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-	state_MemRead:   controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz;  
-	state_MemWB:     controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-        state_MemWrite:  controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-        state_ExecuteR:  controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-        state_ALUWB:     controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz;     
-        state_ExecuteI:  controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz;   
-        state_JAL:       controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-        state_BEQ:       controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
-        state_LUI:       controls_next = 14'bz_z_z_z_z_zz_zz_z_zz_zz; 
+  state_Fetch:     controls_next = 14'b1_x_0_1_0_00_10_0_10_00;      
+  state_Decode:    controls_next = 14'b0_0_0_0_0_01_01_x_xx_00;
+	state_MemAdr:    controls_next = 14'b0_0_0_0_0_10_01_x_xx_00; 
+	state_MemRead:   controls_next = 14'b0_0_0_0_0_xx_xx_1_00_xx;  
+	state_MemWB:     controls_next = 14'b0_0_0_0_1_xx_xx_x_01_xx; 
+        state_MemWrite:  controls_next = 14'b0_0_1_0_0_xx_xx_1_00_xx; 
+        state_ExecuteR:  controls_next = 14'b0_0_0_0_0_10_00_x_xx_10; 
+        state_ALUWB:     controls_next = 14'b0_0_0_0_1_xx_xx_x_00_xx;     
+        state_ExecuteI:  controls_next = 14'b0_0_0_0_0_10_01_x_xx_10;   
+        state_JAL:       controls_next = 14'b1_0_0_0_0_01_10_x_00_00; 
+        state_BEQ:       controls_next = 14'b0_1_0_0_0_10_00_x_00_01; 
+        state_LUI:       controls_next = 14'b0_0_0_0_1_xx_xx_x_11_xx; 
 	default:         controls_next = 14'bx_x_x_x_x_xx_xx_x_xx_xx;
    endcase
  end
